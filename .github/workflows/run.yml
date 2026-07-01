@@ -29,6 +29,8 @@ jobs:
 
       - name: Run Python script with UV
         env:
+          QUARK_PR: ${{ secrets.QUARK_PR }}
+          QUARK_FR: ${{ secrets.QUARK_FR }}
           QUARK_KPS: ${{ secrets.QUARK_KPS }}
           QUARK_SIGN: ${{ secrets.QUARK_SIGN }}
           QUARK_VCODE: ${{ secrets.QUARK_VCODE }}
