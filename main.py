@@ -11,6 +11,8 @@ import os
 kps = os.getenv("QUARK_KPS")
 sign = os.getenv("QUARK_SIGN")
 vcode = os.getenv("QUARK_VCODE")
+pr = os.getenv("QUARK_PR", default="qk_clouddrive")
+fr = os.getenv("QUARK_FR", default="iphone")
 
 if kps is None or sign is None or vcode is None:
     logger.error("请设置 QUARK_KPS 或者 QUARK_SIGN 或者 QUARK_VCODE")
@@ -27,6 +29,25 @@ config_is_ok = False
 if SMTP_SERVER is not None and SMTP_PORT is not None and EMAIL is not None and PASSWORD is not None:
     config_is_ok = True
 
+# 添加 Server酱 推送函数
+def send_to_server(title, desp):
+    server_key = os.environ.get("SERVER_KEY")
+    if not server_key:
+        print("未配置SERVER_KEY推送密钥")
+        return
+    url = f"https://sctapi.ftqq.com/{server_key}.send"
+    data = {
+        "title": title,
+        "desp": desp
+    }
+    try:
+        response = requests.post(url, data=data)
+        if response.status_code == 200:
+            print("Server酱推送成功")
+        else:
+            print(f"Server酱推送失败：{response.text}")
+    except Exception as e:
+        print(f"Server酱推送异常：{str(e)}")
 
 def query_balance():
     """
@@ -86,8 +107,8 @@ def user_info():
     """
     url = "https://drive-m.quark.cn/1/clouddrive/capacity/growth/info"
     querystring = {
-        "pr": "ucpro",
-        "fr": "iphone",
+        "pr": pr,
+        "fr": fr,
         "kps": kps,
         "sign": sign,
         "vcode": vcode,
@@ -111,6 +132,7 @@ def user_info():
                            f"{human_unit(data['total_capacity'])}, 使用容量：{human_unit(data['use_capacity'])}, "
                            f"使用百分比：{data['use_capacity'] / data['total_capacity'] * 100:.2f}%")
         logger.info(notify_message)
+        send_to_server("夸克网盘签到", notify_message)
         if config_is_ok:
             send_email(notify_message)
 
@@ -122,8 +144,8 @@ def checkin():
     """
     url = "https://drive-m.quark.cn/1/clouddrive/capacity/growth/sign"
     querystring = {
-        "pr": "ucpro",
-        "fr": "iphone",
+        "pr": pr,
+        "fr": fr,
         "kps": kps,
         "sign": sign,
         "vcode": vcode,
