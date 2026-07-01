@@ -38,4 +38,5 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
+          SERVER_KEY: ${{ secrets.SERVER_KEY }}
         run: uv run main.py  # 使用 UV 运行 Python 脚本
