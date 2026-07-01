@@ -11,7 +11,7 @@ import os
 kps = os.getenv("QUARK_KPS")
 sign = os.getenv("QUARK_SIGN")
 vcode = os.getenv("QUARK_VCODE")
-pr = os.getenv("QUARK_PR", default="qk_clouddrive")
+pr = os.getenv("QUARK_PR", default="ucpro")
 fr = os.getenv("QUARK_FR", default="iphone")
 
 if kps is None or sign is None or vcode is None:
